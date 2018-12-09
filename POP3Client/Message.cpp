@@ -3,9 +3,9 @@
 
 
 
-Message::Message(std::string content)
+Message::Message(std::vector<std::string> content)
 {
-
+	this->content = content;
 }
 
 Message::~Message()

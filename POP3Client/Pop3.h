@@ -23,12 +23,13 @@ public:
 	void Login(std::string login, std::string password) const;
 	std::vector<std::string> GetAllUIDL() const;
 	Message GetMessageByUIDL(const std::string uidl);
+	Message GetMessageByID(const int id);
 	void Close();
 	~Pop3();
 private:
 	Response GetServerResponse() const;
 	Response GetMultilineResponse() const;
 	void SendCommand(const std::string& command) const;
-	SocketTCP sock;
+	SocketTCP sock{};
 };
 

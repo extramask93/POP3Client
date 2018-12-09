@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Pop3.h"
 #include "SocketTCP.h"
+#include <map>
+#include <utility>
 #include "IPAddress.h"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
@@ -8,7 +10,8 @@
 
 void Pop3::Connect(std::string address, uint32_t port)
 {
-	sock.TCPConnect(IPAddress{address}, port);
+	IPAddress adr{ address };
+	sock.TCPConnect(adr, port);
 	if(const auto response = GetServerResponse(); response.state == State::ERR)
 	{
 		throw std::runtime_error("Connection refused" + response.message);
@@ -48,7 +51,32 @@ std::vector<std::string> Pop3::GetAllUIDL() const
 
 Message Pop3::GetMessageByUIDL(std::string uidl)
 {
-	//TODO
+	std::map<std::string, size_t> uidlmap;
+	std::vector<std::string> buffer{};
+	SendCommand("uidl");
+	const auto response = GetMultilineResponse();
+	if (response.state == State::ERR)
+	{
+		throw std::runtime_error("Reading UIDL's failed" + response.message);
+	}
+	for (auto line : response.data) {
+		boost::split(buffer, line, boost::is_any_of(" "));
+		auto ms = std::make_pair(buffer[1],atoi(buffer[0].c_str()));
+		uidlmap.insert(ms);
+	}
+	int id = uidlmap[uidl];
+	return GetMessageByID(id);
+}
+
+Message Pop3::GetMessageByID(const int id)
+{
+	SendCommand("recv");
+	const auto response = GetMultilineResponse();
+	if (response.state == State::ERR)
+	{
+		throw std::runtime_error("Reading UIDL's failed" + response.message);
+	}
+	return Message { response.data };
 }
 
 
@@ -66,7 +94,7 @@ Response Pop3::GetServerResponse() const
 {
 	Response response{};
 	std::string resp;
-	sock.TCPReceiveString(resp);
+	sock.TCPReceiveLine(resp);
 	if(resp[0] == '+')
 	{
 		response.state = State::OK;

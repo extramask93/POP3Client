@@ -17,7 +17,7 @@ public:
 	std::string 	toString() const;
 	uint32_t 	toInteger() const;
 private:
-	struct hostent *hent = NULL;
-	WSADATA wsa;
+	struct hostent hent{};
+	WSADATA wsa{};
 };
 

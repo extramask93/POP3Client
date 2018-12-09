@@ -11,10 +11,9 @@ public:
 	};
 	SocketTCP();
 	SocketTCP::State TCPConnect(const IPAddress &remoteAddress, unsigned short remotePort, int timeout = 0);
-	SocketTCP::State TCPSend(const void *data, size_t size) const;
-	SocketTCP::State TCPSendString(const std::string s) const;
+	SocketTCP::State TCPSend(const char* data, size_t size) const;
+	SocketTCP::State TCPSendString(std::string s) const;
 	SocketTCP::State TCPReceive(void *data, size_t size, size_t &received) const;
-	SocketTCP::State TCPReceiveString(std::string &s) const;
 	SocketTCP::State TCPReceiveChar(char *c) const;
 	size_t TCPReceiveLine(std::string &line) const;
 	SocketTCP(SocketTCP &socket) = delete;
