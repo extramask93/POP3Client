@@ -51,7 +51,7 @@ std::vector<std::string> Pop3::GetAllUIDL() const
 
 Message Pop3::GetMessageByUIDL(std::string uidl)
 {
-	std::map<std::string, size_t> uidlmap;
+	std::map<std::string, std::string> uidlmap;
 	std::vector<std::string> buffer{};
 	SendCommand("uidl");
 	const auto response = GetMultilineResponse();
@@ -61,16 +61,16 @@ Message Pop3::GetMessageByUIDL(std::string uidl)
 	}
 	for (auto line : response.data) {
 		boost::split(buffer, line, boost::is_any_of(" "));
-		auto ms = std::make_pair(buffer[1],atoi(buffer[0].c_str()));
+		auto ms = std::make_pair(buffer[1],buffer[0]);
 		uidlmap.insert(ms);
 	}
-	int id = uidlmap[uidl];
+	auto id = uidlmap[uidl];
 	return GetMessageByID(id);
 }
 
-Message Pop3::GetMessageByID(const int id)
+Message Pop3::GetMessageByID(std::string id)
 {
-	SendCommand("recv");
+	SendCommand("retr " +id);
 	const auto response = GetMultilineResponse();
 	if (response.state == State::ERR)
 	{
@@ -113,7 +113,7 @@ Response Pop3::GetServerResponse() const
 Response Pop3::GetMultilineResponse() const
 {
 	std::string temp;
-	Response response{};
+	Response response = GetServerResponse();
 	size_t bytesRead = 0;
 	while(true)
 	{

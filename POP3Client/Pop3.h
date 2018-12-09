@@ -23,7 +23,7 @@ public:
 	void Login(std::string login, std::string password) const;
 	std::vector<std::string> GetAllUIDL() const;
 	Message GetMessageByUIDL(const std::string uidl);
-	Message GetMessageByID(const int id);
+	Message GetMessageByID(std::string id);
 	void Close();
 	~Pop3();
 private:
