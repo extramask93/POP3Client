@@ -32,9 +32,9 @@ void Pop3::Login(std::string login, std::string password) const
 	}
 }
 
-std::vector<std::string> Pop3::GetAllUIDL() const
+std::set<std::string> Pop3::GetAllUIDL() const
 {
-	std::vector<std::string> uidl{};
+	std::set<std::string> uidl{};
 	std::vector<std::string> buffer{};
 	SendCommand("uidl");
 	const auto response = GetMultilineResponse();
@@ -44,7 +44,7 @@ std::vector<std::string> Pop3::GetAllUIDL() const
 	}
 	for (auto line : response.data) {
 		boost::split(buffer, line, boost::is_any_of(" "));
-		uidl.push_back(buffer.at(1));
+		uidl.insert(buffer.at(1));
 	}
 	return uidl;
 }
@@ -83,6 +83,7 @@ Message Pop3::GetMessageByID(std::string id)
 void Pop3::Close()
 {
 	SendCommand("quit");
+	GetMultilineResponse();
 }
 
 Pop3::~Pop3()

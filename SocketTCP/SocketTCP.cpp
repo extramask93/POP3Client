@@ -3,7 +3,7 @@
 #include "SocketTCP.h"
 #include "IPAddress.h"
 #include <sstream>
-SocketTCP::SocketTCP()
+SocketTCP::SocketTCP(): sock(-1)
 {
 	WSAStartup(MAKEWORD(2, 2), &this->wsa);
 }
@@ -90,14 +90,56 @@ SocketTCP::State SocketTCP::TCPReceive(void * data, std::size_t size, std::size_
 
 SocketTCP::State SocketTCP::TCPReceiveChar(char* c) const
 {
-	const auto status = recv(sock, c, 1, 0);
-	if(status>=0)
+	if (read(c, 1) > 0)
 	{
 		return State::Done;
 	}
-	throw SocektException{ "Error during read" };
+	return State::NotReady;
 }
 
+void SocketTCP::ReadAll(std::string& s) const
+{
+	char buff;
+	s.clear();
+	while(TCPReceiveChar(&buff) == State::Done)
+	{
+		s += buff;
+	}
+}
+
+size_t SocketTCP::read(char* buffer, size_t size) const
+{
+	int64_t bytesRead = 0;
+	if (!isReadyToRead())
+	{
+		return bytesRead;
+	}
+
+	bytesRead = ::recv(sock, buffer, size,0);
+	if (bytesRead < 0)
+	{
+		throw std::runtime_error("Unable to resolve data from remote host");
+	}
+
+	return bytesRead;
+}
+
+bool SocketTCP::isReadyToRead() const
+{
+	fd_set recieveFd;
+	struct timeval timeout;
+
+	FD_ZERO(&recieveFd);
+	FD_SET(sock, &recieveFd);
+
+	/* 30 seconds timeout */
+	timeout.tv_sec = 10;
+	timeout.tv_usec = 0;
+
+	const int selectReturnValue = select(sock + 1, &recieveFd, NULL, NULL, &timeout);
+	return selectReturnValue>0? true : false;
+
+}
 size_t SocketTCP::TCPReceiveLine(std::string& line) const
 {
 

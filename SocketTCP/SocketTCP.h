@@ -15,6 +15,9 @@ public:
 	SocketTCP::State TCPSendString(std::string s) const;
 	SocketTCP::State TCPReceive(void *data, size_t size, size_t &received) const;
 	SocketTCP::State TCPReceiveChar(char *c) const;
+	void ReadAll(std::string& s) const;
+	size_t read(char * buffer, size_t size) const;
+	bool isReadyToRead() const;
 	size_t TCPReceiveLine(std::string &line) const;
 	SocketTCP(SocketTCP &socket) = delete;
 	~SocketTCP();

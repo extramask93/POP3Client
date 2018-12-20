@@ -4,6 +4,7 @@
 #include <vector>
 #include "Message.h"
 #include "SocketTCP.h"
+#include <set>
 
 enum State
 {
@@ -21,7 +22,7 @@ public:
 	Pop3() = default;
 	void Connect(std::string address, uint32_t port = 110);
 	void Login(std::string login, std::string password) const;
-	std::vector<std::string> GetAllUIDL() const;
+	std::set<std::string> GetAllUIDL() const;
 	Message GetMessageByUIDL(const std::string uidl);
 	Message GetMessageByID(std::string id);
 	void Close();
