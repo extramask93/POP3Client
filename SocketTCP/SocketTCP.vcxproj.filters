@@ -21,24 +21,15 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IPAddress.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SocektException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SocketTCP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IPAddress.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SocektException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SocketTCP.cpp">

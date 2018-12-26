@@ -147,15 +147,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IPAddress.h" />
-    <ClInclude Include="SocektException.h" />
+    <ClInclude Include="SocketException.h" />
     <ClInclude Include="SocketTCP.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IPAddress.cpp" />
-    <ClCompile Include="SocektException.cpp" />
     <ClCompile Include="SocketTCP.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -3,15 +3,13 @@
 #include "SocketTCP.h"
 #include <map>
 #include <utility>
-#include "IPAddress.h"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
 
 
 void Pop3::Connect(std::string address, uint32_t port)
 {
-	IPAddress adr{ address };
-	sock.TCPConnect(adr, port);
+	sock.TCPConnect(address, port);
 	if(const auto response = GetServerResponse(); response.state == State::ERR)
 	{
 		throw std::runtime_error("Connection refused" + response.message);
@@ -83,7 +81,7 @@ Message Pop3::GetMessageByID(std::string id)
 void Pop3::Close()
 {
 	SendCommand("quit");
-	GetMultilineResponse();
+	GetServerResponse();
 }
 
 Pop3::~Pop3()
@@ -95,7 +93,7 @@ Response Pop3::GetServerResponse() const
 {
 	Response response{};
 	std::string resp;
-	sock.TCPReceiveLine(resp);
+	sock.TCPReceiveUntil(resp);
 	if(resp[0] == '+')
 	{
 		response.state = State::OK;
@@ -116,10 +114,10 @@ Response Pop3::GetMultilineResponse() const
 	std::string temp;
 	Response response = GetServerResponse();
 	size_t bytesRead = 0;
-	while(true)
+	while(response.state == State::OK) //multiline only if positive
 	{
 		temp.clear();
-		bytesRead = sock.TCPReceiveLine(temp);
+		bytesRead = sock.TCPReceiveUntil(temp);
 		if(bytesRead == 0 || temp == ".")
 		{
 			break;
