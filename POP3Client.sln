@@ -8,7 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "POP3Client", "POP3Client\PO
 		{43845A01-B075-466F-A82B-A34DC65BF092} = {43845A01-B075-466F-A82B-A34DC65BF092}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SocketTCP", "SocketTCP\SocketTCP.vcxproj", "{43845A01-B075-466F-A82B-A34DC65BF092}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SocketTCP", "SocketLib\SocketTCP.vcxproj", "{43845A01-B075-466F-A82B-A34DC65BF092}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
